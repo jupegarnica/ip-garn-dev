@@ -1,11 +1,13 @@
-import { Hono } from 'hono'
+import { Context, Hono } from 'hono'
 import { PropsWithChildren } from 'hono/jsx'
-
+import { getConnInfo } from 'hono/deno'
 const app = new Hono();
 
-app.get('/', async (c) => {
-  const ip = c.req.header('x-forwarded-for') || c.req.header('remote-addr') || '';
-  console.log(c.req);
+app.get('/', async (c: Context) => {
+  const connInfo = getConnInfo(c);
+
+  const ip = connInfo?.remote?.address || '';
+  console.log(connInfo);
 
   return c.render(<Ip ip={ip} />);
 });
@@ -97,8 +99,4 @@ function Ip({ ip }: { ip: string }) {
 }
 
 
-Deno.serve((req, info) => {
-  console.log({info});
-
-  return app.fetch(req)
-});
+Deno.serve(app.fetch);
