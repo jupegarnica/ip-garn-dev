@@ -5,6 +5,8 @@ const app = new Hono();
 
 app.get('/', async (c) => {
   const ip = c.req.header('x-forwarded-for') || c.req.header('remote-addr') || '';
+  console.log({ ip });
+
   return c.render(<Ip ip={ip} />);
 });
 
