@@ -5,7 +5,7 @@ const app = new Hono();
 
 app.get('/', async (c) => {
   const ip = c.req.header('x-forwarded-for') || c.req.header('remote-addr') || '';
-  console.log({ ip, headers: c.req.raw.headers });
+  console.log(c.req);
 
   return c.render(<Ip ip={ip} />);
 });
@@ -97,4 +97,8 @@ function Ip({ ip }: { ip: string }) {
 }
 
 
-Deno.serve(app.fetch)
+Deno.serve((req, info) => {
+  console.log({info});
+
+  return app.fetch(req)
+});
