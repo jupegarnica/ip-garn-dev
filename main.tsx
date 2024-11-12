@@ -16,16 +16,28 @@ const Main = (children: string) => `<html>
       <style>
         :root {
           --glow-shadow-color: #fc06;
+          --bg-color-1: #ffffff;
+          --bg-color-2: #51327577;
         }
         body {
           margin: 0;
+          overflow: hidden;
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          font-family: 'Courier New', Courier, monospace;
+          font-size: 2em;
+          background: linear-gradient(135deg, var(--bg-color-1) 50%, var(--bg-color-2) 120%);
+
         }
         a {
           all: unset;
           cursor: pointer;
           font-size: 2em;
           font-weight: 600;
-          color: #fffb;
+          color: #666;
           transition: all 0.4s ease;
           cursor: copy;
         }
@@ -56,20 +68,36 @@ const Main = (children: string) => `<html>
           text-underline-offset: 0.1em;
           color: #444;
         }
-        body {
+        @keyframes rotateBackground {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+        .content::after {
+          content: '';
+          position: absolute;
+          transform: translate(-50%, -50%);
+          width: 90vmin;
+          height: 90vmin;
           background: linear-gradient(
             135deg,
-            rgb(77, 47, 126) 30%,
-            #51327577 100%
+            var(--bg-color-1) 60%,
+            var(--bg-color-2) 100%
           );
-          font-size: clamp(20px, 5vmin, 150px);
-          background-color: tomato;
-          color: white;
+          border-radius: 50%;
+          z-index: -1;
+          transform-origin: center;
+          animation: rotateBackground 20s linear infinite;
+        }
+        .content {
+          position: relative;
           height: 100vh;
           display: flex;
           justify-content: center;
           align-items: center;
-          font-family: 'Courier New', Courier, monospace;
         }
       </style>
       <script>
@@ -89,7 +117,9 @@ const Main = (children: string) => `<html>
       </script>
     </head>
     <body>
-      ${children}
+      <div class="content">
+        ${children}
+      </div>
     </body>
   </html>
 `;
