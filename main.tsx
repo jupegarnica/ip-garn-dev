@@ -27,6 +27,7 @@ const Main = (children: string) => `<html>
           font-weight: 600;
           color: #fffb;
           transition: all 0.4s ease;
+          cursor: copy;
         }
         a:hover {
           text-shadow:
@@ -71,6 +72,21 @@ const Main = (children: string) => `<html>
           font-family: 'Courier New', Courier, monospace;
         }
       </style>
+      <script>
+        function copyToClipboard(text) {
+          const textarea = document.createElement('textarea');
+          textarea.value = text;
+          document.body.appendChild(textarea);
+          textarea.select();
+          try {
+            document.execCommand('copy');
+            alert('IP address copied to clipboard');
+          } catch (err) {
+            console.error('Could not copy text: ', err);
+          }
+          document.body.removeChild(textarea);
+        }
+      </script>
     </head>
     <body>
       ${children}
@@ -82,7 +98,7 @@ function Ip(ip: string) {
   if (!ip) {
     return Main('<h1>Could not get your IP</h1>');
   }
-  return Main(`<a href="http://${ip}">${ip}</a>`);
+  return Main(`<a href="#" onclick="copyToClipboard('${ip}')">${ip}</a>`);
 }
 
 Deno.serve(app.fetch);
