@@ -1,13 +1,9 @@
 import { Context, Hono } from 'hono'
-import { getConnInfo } from 'hono/deno'
-import { html } from 'hono/html'
 const app = new Hono();
 
 app.get('/', async (c: Context) => {
-  const connInfo = getConnInfo(c);
-
-  const ip = connInfo?.remote?.address || '';
-  console.log(connInfo);
+  // Cloudflare expone la IP real del cliente en la cabecera CF-Connecting-IP
+  const ip = c.req.header('cf-connecting-ip') || '';
   return c.html(Ip(ip));
 });
 
@@ -131,4 +127,4 @@ function Ip(ip: string) {
   return Main(`<a href="#" onclick="copyToClipboard('${ip}')">${ip}</a>`);
 }
 
-Deno.serve(app.fetch);
+export default app;
